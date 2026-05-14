@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isabela Amaral — UI Designer</title>
+  <meta name="description" content="Portfolio de Isabela Amaral, UI Designer. Transformando interfaces em experiências mais leves, intuitivas e humanas." />
+  <meta property="og:title" content="Isabela Amaral — UI Designer" />
+  <meta property="og:description" content="Transformando interfaces em experiências mais leves, intuitivas e humanas." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #F9F9F9;
+      --ink: #1F1F1F;
+      --ink-soft: #747F8B;
+      --ink-muted: #9AA6B3;
+      --hairline: #CAD5E1;
+      --pink: #F37AB0;
+      --coral: #FF7167;
+      --purple: #9C97FA;
+      --sky: #91D8E5;
+      --lime: #CDE162;
+      --yellow: #F2D75F;
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:#F9F9F9;
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.45;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -5;
+      background:#F9F9F9;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -4;
+      opacity: .04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .font-display { font-family: "Work Sans", system-ui, sans-serif; }
+    .container { width: min(100% - 48px, 1280px); margin-inline: auto; }
+    .glass {
+      background:#F9F9F9;
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: 0 18px 70px rgba(31,31,31,.055), inset 0 1px rgba(255,255,255,.65);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+    .glass-soft {
+      background:#F9F9F9;
+      border: 1px solid rgba(255,255,255,.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .aurora { position: fixed; inset: 0; pointer-events: none; z-index: -3; overflow: hidden; }
+    .orb { position: absolute; border-radius: 999px; filter: blur(70px); opacity: .52; animation: drift 18s ease-in-out infinite; }
+    .orb-1 { width: 42rem; height: 42rem; top: -14rem; left: -10rem; background:#F9F9F9; }
+    .orb-2 { width: 40rem; height: 40rem; top: 32%; right: -16rem; background:#F9F9F9; animation-delay: -6s; }
+    .orb-3 { width: 36rem; height: 36rem; bottom: -8rem; left: 25%; background:#F9F9F9; animation-delay: -12s; }
+    @keyframes drift { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(22px,-28px,0) scale(1.05); } }
+    @keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes reveal { from { opacity: 0; transform: translateY(28px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+    .reveal { animation: reveal .9s cubic-bezier(.22,1,.36,1) both; }
+    .float-slow { animation: floatSlow 7s ease-in-out infinite; }
+    header {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      width: min(100% - 32px, 1024px);
+    }
+    nav {
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 10px 20px;
+    }
+    .logo { color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: -.02em; }
+    .logo span { color: var(--coral); }
+    .nav-links { list-style: none; display: flex; align-items: center; gap: 28px; font-size: 12.5px; }
+    .nav-links a, .subtle-link { color: var(--ink-soft); text-decoration: none; transition: color .25s ease, transform .25s ease; }
+    .nav-links a:hover, .subtle-link:hover { color: var(--ink); }
+    .nav-cta, .button-primary {
+      text-decoration: none;
+      border-radius: 999px;
+      background:#F9F9F9;
+      color: var(--paper);
+      font-size: 13px;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform .35s ease;
+    }
+    .nav-cta:hover, .button-primary:hover { transform: translateY(-2px); }
+    .button-primary { padding: 8px 8px 8px 24px; }
+    .button-primary span { width: 36px; height: 36px; border-radius: 50%; background:#F9F9F9; color: var(--ink); display: grid; place-items: center; transition: transform .4s ease; }
+    .button-primary:hover span { transform: rotate(45deg); }
+    section { position: relative; padding-inline: 0; }
+    .hero { min-height: 100svh; padding-top: 144px; padding-bottom: 48px; }
+    .hero-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: center; }
+    .hero-copy { grid-column: span 7; display: flex; flex-direction: column; justify-content: center; }
+    .hero-visual { grid-column: span 5; min-height: 28rem; position: relative; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; width: fit-content; border-radius: 999px; padding: 6px 16px 6px 8px; font-size: 12px; color: var(--ink-soft); }
+    .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; background:#F9F9F9; box-shadow: 0 0 10px var(--lime); }
+    .eyebrow { margin-top: 40px; color: var(--ink-soft); font-style: italic; font-size: clamp(18px, 2vw, 20px); }
+    h1 { margin-top: 12px; font-size: clamp(4.5rem, 15vw, 14rem); line-height: .86; letter-spacing: -.055em; font-weight: 500; }
+    h1 span { color: var(--coral); font-weight: 300; font-style: italic; }
+    .hero-sub { margin-top: 32px; max-width: 570px; color: var(--ink-soft); font-size: clamp(17px, 1.7vw, 19px); line-height: 1.55; text-wrap: balance; }
+    .hero-sub strong { color: var(--ink); font-weight: 500; }
+    .actions { margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+    .portrait-card { position: relative; margin-left: auto; margin-top: 16px; width: 88%; max-width: 448px; aspect-ratio: 4/5; border-radius: 32px; overflow: hidden; }
+    .portrait-card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); display: block; }
+    .portrait-card::after { content: ""; position: absolute; inset: 0; background:#F9F9F9; }
+    .floating-card { position: absolute; border-radius: 22px; padding: 16px; width: 224px; bottom: 24px; left: -40px; color: var(--ink); }
+    .floating-chip { position: absolute; top: -8px; left: -24px; border-radius: 999px; padding: 8px 16px; font-size: 11px; color: var(--ink-soft); }
+    .meta-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: .18em; color: var(--ink-muted); }
+    .meta-text { margin-top: 6px; font-size: 13px; line-height: 1.35; }
+    .marquee-wrap { margin-top: 72px; overflow: hidden; border-top: 1px solid rgba(202,213,225,.55); border-bottom: 1px solid rgba(202,213,225,.55); padding: 20px 0; }
+    .marquee { display: flex; width: max-content; animation: marquee 30s linear infinite; gap: 48px; color: var(--ink-muted); font-size: 14px; }
+    .marquee-group { display: flex; gap: 48px; }
+    .marquee span { display: inline-flex; gap: 48px; align-items: center; }
+    .star { color: var(--coral); }
+    .section-pad { padding-block: 80px; }
+    .section-pad-lg { padding-block: 96px; }
+    .section-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .section-kicker { grid-column: span 3; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: var(--ink-muted); }
+    .section-title-wrap { grid-column: span 9; }
+    h2 { font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.04; letter-spacing: -.04em; font-weight: 500; text-wrap: balance; }
+    .about h2 { font-size: clamp(2.25rem, 5.5vw, 4.5rem); }
+    .italic-accent { color: var(--purple); font-style: italic; font-weight: 300; }
+    .about-body { margin-top: 40px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+    .about-text { grid-column: span 7; max-width: 610px; }
+    .about-text p { color: var(--ink-soft); font-size: 17px; line-height: 1.7; }
+    .about-text p + p { margin-top: 24px; }
+    .quote-wrap { grid-column: span 5; }
+    .quote { border-radius: 28px; padding: 28px; }
+    .quote p { font-style: italic; font-size: 24px; line-height: 1.25; }
+    .quote .small { display: flex; align-items: center; gap: 12px; margin-top: 24px; color: var(--ink-muted); font-size: 12px; }
+    .quote .small::before { content: ""; display: block; width: 32px; height: 1px; background:#F9F9F9; }
+    .project-featured { border-radius: 32px; overflow: hidden; padding: 12px; }
+    .project-layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+    .project-image { grid-column: span 7; border-radius: 26px; overflow: hidden; min-height: 448px; position: relative; }
+    .project-image img, .card-image img, .lab-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.4s cubic-bezier(.22,1,.36,1); }
+    .project-featured:hover img, .project-card:hover img, .lab-card:hover img { transform: scale(1.04); }
+    .project-info { grid-column: span 5; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+    .project-eyebrow { display: flex; gap: 12px; align-items: center; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: var(--ink-muted); }
+    .project-info h3 { margin-top: 20px; font-size: clamp(2rem, 3.5vw, 3rem); line-height: .95; letter-spacing: -.04em; font-weight: 500; }
+    .project-info p, .project-card-desc { margin-top: 20px; color: var(--ink-soft); font-size: 15px; line-height: 1.7; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { border-radius: 999px; padding: 5px 12px; font-size: 11px; color: var(--ink-soft); }
+    .project-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+    .project-card:nth-child(1) { grid-column: span 7; }
+    .project-card:nth-child(2) { grid-column: span 5; margin-top: 96px; }
+    .card-image { position: relative; border-radius: 26px; overflow: hidden; padding: 8px; aspect-ratio: 5/4; }
+    .project-card:nth-child(2) .card-image { aspect-ratio: 4/5; }
+    .card-image img, .lab-image img { border-radius: 22px; }
+    .project-meta { margin-top: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding-inline: 4px; }
+    .project-meta h3 { font-size: 24px; letter-spacing: -.03em; font-weight: 500; }
+    .project-meta .date { margin-top: 6px; color: var(--ink-muted); font-size: 12px; }
+    .project-meta .right { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: .16em; text-align: right; }
+    .project-card-desc { margin-top: 12px; padding-inline: 4px; max-width: 450px; font-size: 14px; line-height: 1.6; }
+    .skills-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 20px; }
+    .skill-card { grid-column: span 4; border-radius: 28px; padding: 28px; overflow: hidden; position: relative; min-height: 230px; transition: transform .5s ease; }
+    .skill-card:hover { transform: translateY(-4px); }
+    .skill-card::before { content: ""; position: absolute; top: -80px; right: -80px; width: 224px; height: 224px; border-radius: 50%; filter: blur(44px); opacity: .48; background:#F9F9F9; transition: opacity .5s ease; }
+    .skill-card:hover::before { opacity: .75; }
+    .skill-top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: var(--ink-muted); }
+    .skill-dot { width: 8px; height: 8px; border-radius: 50%; background:#F9F9F9; box-shadow: 0 0 18px var(--skill-color); }
+    .skill-card h3 { margin-top: 48px; font-size: 26px; letter-spacing: -.03em; font-weight: 500; }
+    .skill-card p { margin-top: 12px; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+    .lab-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 20px; }
+    .lab-card { grid-column: span 4; }
+    .lab-card:nth-child(2) { transform: translateY(48px); }
+    .lab-image { position: relative; border-radius: 28px; overflow: hidden; padding: 8px; aspect-ratio: 4/5; }
+    .lab-caption { margin-top: 16px; padding-inline: 4px; display: flex; justify-content: space-between; align-items: baseline; }
+    .lab-caption strong { font-size: 18px; letter-spacing: -.02em; font-weight: 500; }
+    .lab-caption span { color: var(--ink-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .18em; }
+    .contact { padding-top: 96px; padding-bottom: 128px; }
+    .contact-kicker { color: var(--ink-soft); font-style: italic; font-size: 18px; }
+    .contact h2 { margin-top: 24px; font-size: clamp(2.5rem, 9vw, 8rem); line-height: .92; }
+    .contact h2 span { color: var(--coral); font-style: italic; font-weight: 300; }
+    .contact-grid { margin-top: 64px; display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 24px; }
+    .email-card { grid-column: span 7; border-radius: 28px; padding: 28px; display: flex; justify-content: space-between; gap: 24px; align-items: center; text-decoration: none; color: var(--ink); transition: transform .5s ease; }
+    .email-card:hover { transform: translateY(-4px); }
+    .email-card .label, .social-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: var(--ink-muted); }
+    .email-card .address { margin-top: 8px; font-size: clamp(1.35rem, 2.8vw, 2rem); letter-spacing: -.03em; }
+    .arrow-circle { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background:#F9F9F9; color: var(--paper); transition: transform .35s ease; flex: 0 0 auto; }
+    .email-card:hover .arrow-circle { transform: rotate(45deg); }
+    .social-list { grid-column: span 5; display: grid; gap: 20px; }
+    .social-card { border-radius: 18px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: var(--ink); transition: transform .35s ease; }
+    .social-card:hover { transform: translateY(-2px); }
+    .social-card p:last-child { margin-top: 4px; font-size: 15px; }
+    .social-dot { width: 8px; height: 8px; border-radius: 50%; background:#F9F9F9; box-shadow: 0 0 14px var(--social-color); }
+    footer { border-top: 1px solid rgba(202,213,225,.55); padding: 40px 0; }
+    footer .container { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--ink-muted); font-size: 12px; }
+    footer em { font-style: italic; }
+    @media (max-width: 980px) {
+      .container { width: min(100% - 32px, 1280px); }
+      .nav-links { display: none; }
+      .hero { padding-top: 120px; }
+      .hero-copy, .hero-visual, .section-kicker, .section-title-wrap, .about-text, .quote-wrap, .project-image, .project-info, .project-card:nth-child(1), .project-card:nth-child(2), .skill-card, .lab-card, .email-card, .social-list { grid-column: span 12; }
+      .hero-visual { order: -1; min-height: auto; }
+      .portrait-card { margin-inline: auto; width: min(88%, 420px); }
+      .floating-card { left: 0; bottom: 18px; }
+      .floating-chip { left: 8px; }
+      .project-image { min-height: 320px; aspect-ratio: 5/4; }
+      .project-info { padding: 20px; }
+      .project-card:nth-child(2), .lab-card:nth-child(2) { margin-top: 0; transform: none; }
+      .section-pad, .section-pad-lg { padding-block: 64px; }
+      .contact { padding-block: 72px 96px; }
+    }
+  </style>
+
+<style>
+html,body{
+background:#F9F9F9 !important;
+}
+section,footer,main{
+background:transparent !important;
+}
+a{
+color:inherit;
+text-decoration:none;
+}
+</style>
+
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+
+  <header>
+    <nav class="glass">
+      <a class="logo" href="#top">Isabela<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">Sobre</a></li>
+        <li><a href="#work">Projetos</a></li>
+        <li><a href="#capabilities">Skills</a></li>
+        <li><a href="#lab">Experimentos</a></li>
+        <li><a href="#contact">Contato</a></li>
+      </ul>
+      <a class="nav-cta" href="#contact">Vamos conversar</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="pill glass reveal" style="animation-delay:50ms"><span class="dot"></span></div>
+          <p class="eyebrow reveal" style="animation-delay:150ms">Hello, me chamo Isabela —</p>
+          <h1 class="reveal" style="animation-delay:250ms">Isa<span>b</span>ela</h1>
+          <p class="hero-sub reveal" style="animation-delay:400ms">Transformando interfaces em experiências <strong>mais leves, intuitivas</strong> e humanas.</p>
+          <div class="actions reveal" style="animation-delay:550ms">
+            <a class="button-primary" href="#work">Projetos selecionados <span>↗</span></a>
+            <a class="subtle-link" href="#contact">Entrar em contato</a>
+          </div>
+        </div>
+        <div class="hero-visual reveal" style="animation-delay:300ms">
+          <div class="portrait-card glass float-slow"><img src="assets/portrait.jpg" alt="Retrato de Isabela Amaral, UI Designer"></div>
+          <div class="floating-card glass float-slow" style="animation-delay:-3s"><p class="meta-title">Atualmente</p><p class="meta-text">Criando sistemas calmos para produtos que valorizam os pequenos detalhes.</p></div>
+          <div class="floating-chip glass float-slow" style="animation-delay:-6s"><span style="color:var(--purple)">●</span> </div>
+        </div>
+      </div>
+      <div class="marquee-wrap">
+        <div class="marquee">
+          <div class="marquee-group">
+            <span>Interação Humano-Computador (IHC/UX) <b class="star">✦</b></span><span> <b class="star">✦</b></span><span>UI Design <b class="star">✦</b></span><span>UX Design <b class="star">✦</b></span><span>Design Systems <b class="star">✦</b></span><span>Product Thinking <b class="star">✦</b></span>
+          </div>
+          <div class="marquee-group" aria-hidden="true">
+            <span>Interação Humano-Computador (IHC/UX) <b class="star">✦</b></span><span> <b class="star">✦</b></span><span>UI Design <b class="star">✦</b></span><span>UX Design <b class="star">✦</b></span><span>Design Systems <b class="star">✦</b></span><span>Product Thinking <b class="star">✦</b></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section-pad about">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">01 — Filosofia</p>
+          <div class="section-title-wrap"><h2>Crio <span class="italic-accent">interfaces que respiram</span> — sistemas silenciosos onde cada detalhe existe com intenção.</h2>
+            <div class="about-body">
+              <div class="about-text"><p>Acredito que tecnologia deveria parecer como luz entrando em um ambiente: presente, útil e nunca excessiva. Meu trabalho une clareza editorial, sensibilidade visual e pensamento sistêmico.</p><p>Design não é decoração. É tradução: transformar complexidade em gestos simples o suficiente para serem intuitivos, e fortes o suficiente para parecerem humanos.</p></div>
+              <div class="quote-wrap"><div class="quote glass"><p>“Beleza é o resultado do cuidado obsessivo com os pequenos detalhes.”</p><div class="small">Princípio de trabalho nº 4</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" class="section-pad">
+      <div class="container">
+        <div class="section-head"><p class="section-kicker">02 — Projetos</p><div class="section-title-wrap"><h2>Projetos construídos com intenção, clareza e atenção aos detalhes.</h2></div></div>
+        <article class="project-featured glass">
+          <div class="project-layout">
+            <div class="project-image"><img src="assets/project-doglibrary.jpg" alt="DogLibrary"></div>
+            <div class="project-info"><div><div class="project-eyebrow"><span class="dot" style="background:#F9F9F9; box-shadow:none"></span>Destaque · 2025</div><h3>DogLibrary</h3><p>Uma plataforma criada para ajudar futuros tutores a descobrirem raças compatíveis com seu estilo de vida, por meio de uma experiência guiada, intuitiva e informativa.</p></div><div class="tags"><span class="tag glass-soft">Product Design</span><span class="tag glass-soft">Design System</span><span class="tag glass-soft">UX</span></div></div>
+          </div>
+        </article>
+        <div class="project-grid">
+          <article class="project-card"><div class="card-image glass"><img src="assets/project-kidzenith.jpg" alt="Kidzenith"></div><div class="project-meta"><div><h3>Kidzenith</h3><p class="date">Onboarding · 2025</p></div><p class="right">UX Writing · Motion</p></div><p class="project-card-desc">Um fluxo de onboarding que acolhe famílias com uma experiência lúdica, calma e confiante.</p></article>
+          <article class="project-card"><div class="card-image glass"><img src="assets/project-terpafy.jpg" alt="Terpafy"></div><div class="project-meta"><div><h3>Terpafy</h3><p class="date">Identidade · 2024</p></div><p class="right">Brand · Sistema</p></div><p class="project-card-desc">Uma identidade visual construída a partir da suavidade: cor como voz, tipografia como postura.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="capabilities" class="section-pad">
+      <div class="container">
+        <div class="section-head"><p class="section-kicker">03 — Skills</p><div class="section-title-wrap"><h2>Áreas que moldam minha forma de construir experiências digitais.</h2></div></div>
+        <div class="skills-grid">
+          <div class="skill-card glass" style="--skill-color: var(--pink)"><div class="skill-top"><span>01</span><span class="skill-dot"></span></div><h3>Interaction Design</h3><p>Gestos e fluxos pensados para parecerem naturais.</p></div>
+          <div class="skill-card glass" style="--skill-color: var(--purple)"><div class="skill-top"><span>02</span><span class="skill-dot"></span></div><h3>UI & Direção Visual</h3><p>Composição editorial aplicada a superfícies digitais.</p></div>
+          <div class="skill-card glass" style="--skill-color: var(--sky)"><div class="skill-top"><span>03</span><span class="skill-dot"></span></div><h3>Design Systems</h3><p>Tokens, componentes e arquitetura visual consistente.</p></div>
+          <div class="skill-card glass" style="--skill-color: var(--coral)"><div class="skill-top"><span>04</span><span class="skill-dot"></span></div><h3>Motion</h3><p>Movimentos sutis, lentos e atmosféricos, quase invisíveis.</p></div>
+          <div class="skill-card glass" style="--skill-color: var(--lime)"><div class="skill-top"><span>05</span><span class="skill-dot"></span></div><h3>Systems Thinking</h3><p>Organização de complexidade em experiências mais claras.</p></div>
+          <div class="skill-card glass" style="--skill-color: var(--yellow)"><div class="skill-top"><span>06</span><span class="skill-dot"></span></div><h3>Product Strategy</h3><p>Alinhamento entre intenção humana, interface e produto.</p></div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section id="contact" class="contact">
+      <div class="container">
+        <p class="contact-kicker">Vamos criar algo leve, humano e memorável.</p>
+        <h2>Vamos <span>conversar</span>.</h2>
+        <div class="contact-grid">
+          <a class="email-card glass" href="mailto:isabela@amaral.design"><div><p class="label">Email</p><p class="address">isabela@amaral.design</p></div><span class="arrow-circle">↗</span></a>
+          <div class="social-list">
+            <a class="social-card glass" href="#" style="--social-color: var(--purple)"><div><p class="label">LinkedIn</p><p><a href="https://instagram.com/bela.mral" target="_blank">@bela.mral</a></p></div><span class="social-dot"></span></a>
+            <a class="social-card glass" href="#" style="--social-color: var(--pink)"><div><p class="label">Dribbble</p><p><a href="https://www.linkedin.com/in/isabelamral/" target="_blank">/in/isabelamral</a></p></div><span class="social-dot"></span></a>
+            <a class="social-card glass" href="#" style="--social-color: var(--sky)"><div><p class="label">Read.cv</p><p>Em breve</p></div><span class="social-dot"></span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container"><p>© 2026 Isabela Amaral · UI Designer · Brasil / Anywhere</p><em>Criado e desenvolvido por Isabela Amaral com apoio de IA.</em></div></footer>
+</body>
+</html>
+
+<!-- Assets added: doglibrary.gif, terpafy.png, kidzenith.mp4 -->
+<style>
+body{background:#F9F9F9;}
+.current-text{font-size:18px;line-height:1.6;color:#1F1F1F;}
+.skill-card::before,.skill-card::after{display:none!important;}
+.project-featured{min-height:420px!important;}
+.project-card{min-height:320px!important;}
+.projects-grid{gap:24px!important;}
+.contact-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+.contact-links a{
+padding:14px 22px;
+border-radius:999px;
+border:1px solid #E5E7EB;
+text-decoration:none;
+color:#1F1F1F;
+background:#F9F9F9;
+font-weight:500;
+}
+</style>
+
+
