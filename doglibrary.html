@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DogLibrary — Case Study | Isabela Amaral</title>
+  <meta name="description" content="Case study do DogLibrary, projeto de UX/UI Design para apoiar escolhas conscientes na busca por cães compatíveis com rotina e estilo de vida." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --pink:#F37AB0; --coral:#FF7167; --purple:#9C97FA; --sky:#91D8E5; --lime:#CDE162; --yellow:#F2D75F;
+      --ink:#1F1F1F; --ink-soft:#747F8B; --ink-muted:#9AA6B3; --hairline:#CAD5E1; --paper:#F9F9F9;
+      --dog-purple:#7A6DDA; --dog-lavender:#A2A5FF; --dog-pale:#E7E6FF; --dog-blue:#3154C8; --dog-mint:#B5E3D8; --dog-coral:#FD7C5F;
+      --glass:rgba(255,255,255,.58);
+      --shadow:0 24px 70px rgba(31,31,31,.07), inset 0 1px 0 rgba(255,255,255,.85);
+      --ease:cubic-bezier(.22,1,.36,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--paper);color:var(--ink);font-family:"Work Sans",system-ui,sans-serif;font-weight:300;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:inherit;text-decoration:none} img,video{display:block;max-width:100%}
+    body.loading{overflow:hidden}
+    .loader{position:fixed;inset:0;z-index:999;background:var(--paper);display:grid;place-items:center;transition:opacity .7s var(--ease),visibility .7s var(--ease)}
+    .loader.hidden{opacity:0;visibility:hidden}
+    .loader-orb{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--dog-lavender),var(--dog-mint),var(--dog-coral));filter:blur(.2px);animation:liquid 2.4s ease-in-out infinite;box-shadow:0 20px 80px rgba(122,109,218,.20)}
+    .page{position:relative;isolation:isolate;overflow:hidden}
+    .page::before{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;background:radial-gradient(circle at 7% 8%,rgba(162,165,255,.22),transparent 27%),radial-gradient(circle at 92% 12%,rgba(181,227,216,.24),transparent 30%),radial-gradient(circle at 50% 100%,rgba(253,124,95,.12),transparent 34%);animation:aurora 18s ease-in-out infinite alternate}
+    .noise{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.025;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+    @keyframes aurora{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(2.5%, -2%,0) scale(1.03)}}
+    @keyframes liquid{0%,100%{border-radius:53% 47% 65% 35%/48% 52% 48% 52%;transform:rotate(0)}50%{border-radius:35% 65% 42% 58%/60% 35% 65% 40%;transform:rotate(16deg)}}
+    .container{width:min(100% - 48px,1240px);margin-inline:auto}.font-display{font-family:"Satoshi",system-ui,sans-serif}
+    .glass{background:var(--glass);border:1px solid rgba(255,255,255,.78);backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);box-shadow:var(--shadow)}
+    .nav-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:50;width:min(100% - 32px,980px)}
+    nav{height:54px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 18px}
+    .brand{font-family:"Satoshi";font-size:14px;font-weight:500;letter-spacing:-.02em}.brand span{color:var(--coral)}
+    .nav-links{display:flex;gap:28px;list-style:none;font-size:12.5px;color:var(--ink-soft)}.nav-links a{transition:.3s var(--ease)}.nav-links a:hover{color:var(--ink)}
+    .nav-cta{font-size:12.5px;padding:8px 16px;background:var(--ink);color:var(--paper);border-radius:999px;transition:.3s var(--ease)}.nav-cta:hover{transform:translateY(-2px)}
+    section{padding:88px 0}.section-head{display:grid;grid-template-columns:260px 1fr;gap:32px;margin-bottom:48px}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--ink-muted);font-weight:500}
+    h1,h2,h3{font-family:"Satoshi",system-ui,sans-serif;font-weight:500;color:var(--ink);letter-spacing:-.045em}h2{font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.02;max-width:900px}p{line-height:1.7;color:var(--ink-soft)}
+    .reveal{opacity:0;transform:translateY(34px);filter:blur(8px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}.reveal.visible{opacity:1;transform:none;filter:blur(0)}
+    .hero{min-height:92svh;padding:130px 0 58px;display:flex;align-items:center}.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+    h1{font-size:clamp(4.8rem,12vw,11rem);line-height:.86;letter-spacing:-.065em}.hero-copy{max-width:630px;margin-top:28px;font-size:clamp(1.05rem,2vw,1.18rem)}
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}.chip{font-size:11.5px;color:var(--ink-soft);padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9)}
+    .hero-visual{position:relative;border-radius:34px;padding:12px;overflow:hidden}.hero-visual::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 20% 20%,rgba(181,227,216,.55),transparent 35%),radial-gradient(circle at 85% 80%,rgba(253,124,95,.22),transparent 32%);animation:aurora 14s ease-in-out infinite alternate}.hero-visual img{position:relative;width:100%;border-radius:26px;transform:translate3d(var(--mx,0),var(--my,0),0);transition:transform .25s ease-out}
+    .meta-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}.meta-card{border-radius:26px;padding:20px;transition:.45s var(--ease)}.meta-card:hover{transform:translateY(-4px)}.meta-card span{display:block;margin-bottom:10px}.meta-card strong{font-weight:500;font-size:15px;line-height:1.35}
+    .problem-list,.solutions,.architecture{display:grid;gap:16px}.problem-list{margin-top:34px}.problem-item,.solution-card,.arch-card,.compare-card,.decision,.gallery-shell,.palette-section,.final-card,.meta-card{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.82);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .problem-item{border-radius:28px;padding:24px;display:grid;grid-template-columns:44px 1fr;gap:18px;transition:.45s var(--ease)}.problem-item:hover{transform:translateY(-4px)}.problem-number{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--dog-pale);color:var(--dog-blue);font-family:"Satoshi";font-weight:500;font-size:13px}.problem-item h3,.solution-card h3,.arch-card h3,.decision h3{font-size:22px;margin-bottom:8px}.problem-item p,.solution-card p,.arch-card p,.decision p{font-size:14.5px;color:var(--ink-soft)}
+    .split{display:grid;grid-template-columns:260px 1fr;gap:32px}.quote-card{margin-top:34px;border-radius:34px;padding:42px;background:linear-gradient(135deg,rgba(162,165,255,.9),rgba(181,227,216,.9));color:white;position:relative;overflow:hidden}.quote-card::after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.55);filter:blur(40px);animation:float 7s ease-in-out infinite}.quote-card h3{font-size:clamp(2rem,4.4vw,4rem);line-height:1;letter-spacing:-.055em;color:white;position:relative;z-index:1}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(20px)}}
+    .architecture{grid-template-columns:repeat(4,1fr);margin-top:40px}.arch-card{border-radius:28px;padding:26px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;transition:.45s var(--ease)}.arch-card:hover{transform:translateY(-5px)}.arch-card span{font-size:11px;color:var(--ink-muted);letter-spacing:.18em}
+    .wire-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:42px}.compare-card{border-radius:32px;padding:12px}.compare-card img{width:100%;height:340px;object-fit:cover;object-position:top;border-radius:24px;background:#eee}.caption{display:flex;justify-content:space-between;gap:18px;padding:18px 8px 8px}.caption h3{font-size:20px}.caption span{font-size:11px;color:var(--ink-muted);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+    .solutions{grid-template-columns:repeat(3,1fr);margin-top:42px}.solution-card{border-radius:28px;padding:28px;transition:.45s var(--ease)}.solution-card:hover{transform:translateY(-5px)}.solution-card .dot{width:12px;height:12px;border-radius:50%;margin-bottom:42px}
+    .palette-section{border-radius:42px;padding:50px;margin-top:10px}.palette-top{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:end;margin-bottom:34px}.palette-title h2{font-size:clamp(2.2rem,5vw,4.8rem);line-height:1.03}.palette-title p{max-width:580px;margin-top:18px}.unlock-panel{min-height:170px;border-radius:28px;padding:26px;background:rgba(249,249,249,.72);border:1px solid rgba(202,213,225,.45)}.unlock-panel small{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-muted)}.unlock-panel h3{font-size:28px;margin:16px 0 10px}.color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.color-card{font-family:inherit;color:inherit;text-align:left;border:0;border-radius:26px;padding:14px;background:rgba(249,249,249,.74);border:1px solid rgba(202,213,225,.5);cursor:pointer;transition:.45s var(--ease)}.color-card:hover{transform:translateY(-5px)}.swatch{width:100%;aspect-ratio:1;border-radius:18px;margin-bottom:14px}.color-card strong{display:block;font-weight:500;font-size:14px}.color-card span{font-size:12px;color:var(--ink-muted)}
+    .interface-gallery{margin-top:44px}.gallery-shell{border-radius:40px;padding:34px;position:relative;overflow:hidden}.gallery-stage{position:relative;min-height:560px;display:grid;place-items:center}.gallery-bg-card{position:absolute;width:min(38%,390px);height:78%;border-radius:28px;overflow:hidden;filter:blur(3px);opacity:.46;transform:scale(.88);transition:.7s var(--ease);background:#fff}.gallery-bg-card.left{left:0}.gallery-bg-card.right{right:0}.gallery-bg-card img{width:100%;height:100%;object-fit:cover;object-position:top}.gallery-main{position:relative;z-index:2;width:min(72%,780px);border-radius:32px;padding:10px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.85);box-shadow:0 24px 80px rgba(31,31,31,.10);transition:.7s var(--ease)}.gallery-main img{width:100%;max-height:520px;object-fit:contain;object-position:top;border-radius:24px;background:#f1f1f1}.gallery-controls{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:22px}.gallery-info h3{font-size:26px}.gallery-info p{font-size:14px;margin-top:6px}.gallery-buttons{display:flex;gap:10px}.gallery-button{width:44px;height:44px;border:0;border-radius:50%;background:var(--ink);color:white;cursor:pointer;font-size:20px;transition:.35s var(--ease)}.gallery-button:hover{transform:translateY(-3px) rotate(5deg)}
+    .ui-decisions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:38px}.decision{border-radius:28px;padding:26px;min-height:220px}.decision span{font-size:11px;color:var(--dog-coral);letter-spacing:.18em}.decision h3{margin-top:34px}
+    .final-card{border-radius:42px;padding:58px;text-align:center;background:linear-gradient(135deg,rgba(162,165,255,.17),rgba(181,227,216,.22),rgba(253,124,95,.11))}.final-card h2{font-size:clamp(2.4rem,5vw,5rem);line-height:1.03}.final-card p{max-width:740px;margin:24px auto 0;font-size:17px}
+    .footer{padding:44px 0 70px;color:var(--ink-muted);font-size:13px}.footer-inner{border-top:1px solid rgba(202,213,225,.65);padding-top:26px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    @media(max-width:980px){.nav-links{display:none}.hero-grid,.split,.section-head,.palette-top{grid-template-columns:1fr}.meta-strip,.architecture,.solutions,.ui-decisions{grid-template-columns:1fr 1fr}.wire-grid{grid-template-columns:1fr}.color-grid{grid-template-columns:repeat(3,1fr)}.gallery-stage{min-height:430px}.gallery-main{width:88%}.gallery-bg-card{display:none}.compare-card img{height:auto}}
+    @media(max-width:640px){.container{width:min(100% - 28px,1240px)}section{padding:68px 0}.hero{padding-top:112px}.meta-strip,.architecture,.solutions,.ui-decisions,.color-grid{grid-template-columns:1fr}.palette-section,.final-card,.gallery-shell{padding:24px}h1{font-size:4rem}.gallery-main{width:100%}.gallery-main img{max-height:420px}.gallery-controls{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body class="loading">
+<div class="loader" id="loader"><div class="loader-orb"></div></div>
+<div class="page">
+  <div class="noise"></div>
+  <div class="nav-wrap">
+    <nav class="glass">
+      <a class="brand" href="index.html">Isabela<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#about">Sobre</a></li>
+        <li><a href="index.html#work">Projetos</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#contact">Contato</a></li>
+      </ul>
+      <a class="nav-cta" href="index.html">Voltar para home</a>
+    </nav>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="reveal">
+            <p class="kicker">Case study · UX/UI Design</p>
+            <h1>DogLibrary</h1>
+            <p class="hero-copy">Uma plataforma criada para apoiar escolhas mais conscientes na hora de encontrar um cão compatível com a rotina, o espaço e o estilo de vida do futuro tutor.</p>
+            <div class="chips"><span class="chip">Projeto acadêmico</span><span class="chip">Pós-graduação em IHC/UX</span><span class="chip">UX/UI Design</span><span class="chip">Arquitetura da informação</span><span class="chip">Design de interface</span></div>
+          </div>
+          <div class="hero-visual glass reveal parallax-card"><img src="assets/dog-mockup-laptop.png" alt="Mockup do DogLibrary em notebook"></div>
+        </div>
+        <div class="meta-strip reveal">
+          <div class="meta-card glass"><span class="kicker">Projeto</span><strong>Plataforma web para consulta de raças</strong></div>
+          <div class="meta-card glass"><span class="kicker">Papel</span><strong>UX/UI, sistema visual e prototipação</strong></div>
+          <div class="meta-card glass"><span class="kicker">Foco</span><strong>Decisão consciente e comparação</strong></div>
+          <div class="meta-card glass"><span class="kicker">Entrega</span><strong>Wireframes, interface e sistema visual</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="problema">
+      <div class="container split">
+        <p class="kicker reveal">01 — O problema</p>
+        <div>
+          <h2 class="reveal">Escolher um cão não deveria depender só de aparência ou impulso.</h2>
+          <p class="hero-copy reveal">Muitas pessoas se encantam por uma raça sem entender se ela combina com sua rotina, energia, espaço, tempo disponível e capacidade de cuidado.</p>
+          <div class="problem-list">
+            <article class="problem-item reveal"><div class="problem-number">01</div><div><h3>Escolha impulsiva</h3><p>A aparência ou a popularidade pode pesar mais do que necessidades reais de saúde, energia, socialização e rotina.</p></div></article>
+            <article class="problem-item reveal"><div class="problem-number">02</div><div><h3>Informação dispersa</h3><p>O usuário consulta muitas fontes e ainda assim tem dificuldade para comparar raças com os mesmos critérios.</p></div></article>
+            <article class="problem-item reveal"><div class="problem-number">03</div><div><h3>Compatibilidade pouco visível</h3><p>A decisão passa a considerar não só qual cachorro a pessoa quer, mas qual cachorro combina com sua vida.</p></div></article>
+          </div>
+          <div class="quote-card reveal"><h3>De uma escolha emocional para uma decisão mais orientada.</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="processo">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">02 — Arquitetura</p><h2 class="reveal">Organizar informação para reduzir dúvida e apoiar escolhas melhores.</h2></div>
+        <div class="architecture">
+          <article class="arch-card reveal"><span>01</span><h3>Home</h3><p>Entrada emocional e direta para a busca por raças.</p></article>
+          <article class="arch-card reveal"><span>02</span><h3>Filtros</h3><p>Critérios como dócil, guarda, crianças, esportivo e preguiçoso.</p></article>
+          <article class="arch-card reveal"><span>03</span><h3>Perfil da raça</h3><p>História, saúde, cuidados, características e alertas.</p></article>
+          <article class="arch-card reveal"><span>04</span><h3>Favoritos</h3><p>Continuidade da decisão para comparar depois.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="wireframes">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">03 — Wireframes</p><h2 class="reveal">Da estrutura ao produto visual.</h2></div>
+        <div class="wire-grid">
+          <article class="compare-card reveal"><img src="assets/dog-wireframe-home.png" alt="Wireframe da home"><div class="caption"><h3>Home</h3><span>Wireframe</span></div></article>
+          <article class="compare-card reveal"><img src="assets/dog-home.jpg" alt="Tela final da home"><div class="caption"><h3>Home</h3><span>Interface final</span></div></article>
+          <article class="compare-card reveal"><img src="assets/dog-wireframe-all-breeds.png" alt="Wireframe da lista de raças"><div class="caption"><h3>Todas as raças</h3><span>Wireframe</span></div></article>
+          <article class="compare-card reveal"><img src="assets/dog-all-breeds.png" alt="Tela final da lista de raças"><div class="caption"><h3>Todas as raças</h3><span>Interface final</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="solucoes">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">04 — Soluções</p><h2 class="reveal">Soluções pensadas para clareza, comparação e continuidade.</h2></div>
+        <div class="solutions">
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-lavender)"></div><h3>Filtros por compatibilidade</h3><p>O usuário encontra raças a partir de critérios comportamentais e práticos ligados à rotina.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-coral)"></div><h3>Cards comparáveis</h3><p>As raças seguem um padrão visual com dados essenciais, facilitando comparação rápida.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-mint)"></div><h3>Perfil detalhado</h3><p>Cada raça possui uma página com história, características, saúde, cuidados e alertas.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-blue)"></div><h3>Favoritos</h3><p>Raças de interesse podem ser salvas para que a escolha continue com mais calma.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:#675BB5"></div><h3>Estado de erro útil</h3><p>A tela de raça não encontrada mantém o usuário orientado e evita uma experiência sem saída.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:#FD7C5F"></div><h3>Notificações</h3><p>Alertas e novidades reforçam continuidade e mantêm o usuário informado.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="sistema-visual">
+      <div class="container">
+        <div class="palette-section reveal">
+          <div class="palette-top"><div><p class="kicker">05 — Sistema visual</p><h2>Desbloqueie as cores do DogLibrary.</h2><p>Clique nas cores para descobrir como cada uma apoia a experiência, da navegação aos alertas e estados emocionais da interface.</p></div><div class="unlock-panel" id="colorPanel"><small>Cor selecionada</small><h3>Escolha uma cor</h3><p>Cada cor revela uso, intenção e função dentro do sistema visual.</p></div></div>
+          <div class="color-grid" id="colorGrid">
+            <button class="color-card" data-name="Purple 1" data-hex="#A2A5FF" data-use="Destaques suaves, elementos de interface e áreas de orientação." data-feel="Leveza, confiança e acolhimento."><div class="swatch" style="background:#A2A5FF"></div><strong>Purple 1</strong><span>#A2A5FF</span></button>
+            <button class="color-card" data-name="Main Purple" data-hex="#7A6DDA" data-use="Links ativos, títulos de destaque, navegação e estados selecionados." data-feel="Identidade, tecnologia e direção."><div class="swatch" style="background:#7A6DDA"></div><strong>Main Purple</strong><span>#7A6DDA</span></button>
+            <button class="color-card" data-name="Soft Purple" data-hex="#675BB5" data-use="Profundidade visual, apoio e elementos secundários." data-feel="Equilíbrio e continuidade."><div class="swatch" style="background:#675BB5"></div><strong>Soft Purple</strong><span>#675BB5</span></button>
+            <button class="color-card" data-name="Blue" data-hex="#3154C8" data-use="Ênfase, contraste e momentos de maior direcionamento." data-feel="Clareza, segurança e foco."><div class="swatch" style="background:#3154C8"></div><strong>Blue</strong><span>#3154C8</span></button>
+            <button class="color-card" data-name="Mint Blue" data-hex="#B5E3D8" data-use="Fundos suaves, tags positivas e áreas de respiro." data-feel="Bem-estar, cuidado e tranquilidade."><div class="swatch" style="background:#B5E3D8"></div><strong>Mint Blue</strong><span>#B5E3D8</span></button>
+            <button class="color-card" data-name="Coral" data-hex="#FD7C5F" data-use="Alertas, favoritos, marcações emocionais e pontos de atenção." data-feel="Afeto, energia e proximidade."><div class="swatch" style="background:#FD7C5F"></div><strong>Coral</strong><span>#FD7C5F</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="interfaces">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">06 — Interfaces</p><h2 class="reveal">Principais telas em uma galeria interativa.</h2></div>
+        <div class="interface-gallery reveal">
+          <div class="gallery-shell">
+            <div class="gallery-stage">
+              <div class="gallery-bg-card left"><img id="prevImage" src="assets/dog-all-breeds.png" alt="Prévia anterior"></div>
+              <div class="gallery-main"><img id="mainImage" src="assets/dog-home.jpg" alt="Interface principal"></div>
+              <div class="gallery-bg-card right"><img id="nextImage" src="assets/dog-filter-docile.jpg" alt="Próxima prévia"></div>
+            </div>
+            <div class="gallery-controls">
+              <div class="gallery-info"><h3 id="galleryTitle">Home</h3><p id="galleryText">Entrada simples, emocional e visual para iniciar a busca por raças.</p></div>
+              <div class="gallery-buttons"><button class="gallery-button" id="prevBtn" aria-label="Imagem anterior">‹</button><button class="gallery-button" id="nextBtn" aria-label="Próxima imagem">›</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">07 — Decisões de UI</p><h2 class="reveal">As decisões visuais também fazem parte da solução.</h2></div>
+        <div class="ui-decisions">
+          <article class="decision reveal"><span>01</span><h3>Visual acolhedor</h3><p>Formas suaves, ilustrações e cores claras tornam o tema mais emocional e acessível.</p></article>
+          <article class="decision reveal"><span>02</span><h3>Conteúdo em camadas</h3><p>A interface apresenta primeiro o essencial e aprofunda quando o usuário demonstra interesse.</p></article>
+          <article class="decision reveal"><span>03</span><h3>Comparação facilitada</h3><p>Cards padronizados permitem analisar raças usando os mesmos critérios.</p></article>
+          <article class="decision reveal"><span>04</span><h3>Interação emocional</h3><p>Favoritos, notificações e elementos visuais reforçam vínculo e continuidade.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section><div class="container"><div class="final-card reveal"><h2>Design como apoio para escolhas mais conscientes.</h2><p>O DogLibrary mostrou como UX pode transformar uma decisão afetiva em uma jornada mais clara, responsável e orientada ao bem-estar.</p></div></div></section>
+  </main>
+  <footer class="footer"><div class="container footer-inner"><p>© 2026 Isabela Amaral · DogLibrary Case Study</p><a href="index.html">Voltar para o portfólio</a></div></footer>
+</div>
+<script>
+  window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hidden');document.body.classList.remove('loading')},450)});
+  const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}})},{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  document.querySelectorAll('.parallax-card').forEach(card=>{card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;card.style.setProperty('--mx',(x*14)+'px');card.style.setProperty('--my',(y*14)+'px')});card.addEventListener('mouseleave',()=>{card.style.setProperty('--mx','0px');card.style.setProperty('--my','0px')})});
+  const panel=document.getElementById('colorPanel');const buttons=document.querySelectorAll('.color-card');const seen=new Set();buttons.forEach(button=>{button.addEventListener('click',()=>{const {name,hex,use,feel}=button.dataset;seen.add(hex);panel.innerHTML=`<small>${hex}</small><h3>${name}</h3><p><strong>Uso:</strong> ${use}</p><p style="margin-top:10px"><strong>Intenção:</strong> ${feel}</p>${seen.size===buttons.length?'<p style="margin-top:14px;color:#3154C8;font-weight:500">Sistema visual desbloqueado.</p>':''}`})});
+  const gallery=[
+    {src:'assets/dog-home.jpg',title:'Home',text:'Entrada simples, emocional e visual para iniciar a busca por raças.'},
+    {src:'assets/dog-all-breeds.png',title:'Todas as raças',text:'Listagem completa para comparação rápida entre opções.'},
+    {src:'assets/dog-filter-docile.jpg',title:'Filtros por perfil',text:'Critérios ajudam o usuário a explorar raças por compatibilidade.'},
+    {src:'assets/dog-favorites.png',title:'Favoritos',text:'Raças salvas para consulta e comparação posterior.'},
+    {src:'assets/dog-breed-golden.jpg',title:'Descrição da raça',text:'Conteúdo aprofundado com história, cuidados, saúde e alerta final.'},
+    {src:'assets/dog-not-found.png',title:'Raça não encontrada',text:'Estado de erro orientado para ajudar o usuário a continuar a jornada.'}
+  ];
+  let current=0;const mainImage=document.getElementById('mainImage'),prevImage=document.getElementById('prevImage'),nextImage=document.getElementById('nextImage'),galleryTitle=document.getElementById('galleryTitle'),galleryText=document.getElementById('galleryText');
+  function renderGallery(){const prev=(current-1+gallery.length)%gallery.length;const next=(current+1)%gallery.length;mainImage.style.opacity=0;setTimeout(()=>{mainImage.src=gallery[current].src;prevImage.src=gallery[prev].src;nextImage.src=gallery[next].src;galleryTitle.textContent=gallery[current].title;galleryText.textContent=gallery[current].text;mainImage.style.opacity=1},180)}
+  document.getElementById('prevBtn').addEventListener('click',()=>{current=(current-1+gallery.length)%gallery.length;renderGallery()});document.getElementById('nextBtn').addEventListener('click',()=>{current=(current+1)%gallery.length;renderGallery()});
+</script>
+</body>
+</html>
