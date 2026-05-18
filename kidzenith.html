@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kidzenith Onboarding — Case Study | Isabela Amaral</title>
+  <meta name="description" content="Case study do redesign do onboarding da Kidzenith, com UX Writing, Motion com IA, UX Design, UI Design e prototipação com Claude." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="shortcut icon" href="assets/favicon.svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+    :root{
+      --bg:#F9F9F9;
+      --ink:#1F1F1F;
+      --muted:#747F8B;
+      --soft:#9AA6B3;
+      --line:#E7EDF4;
+
+      --purple:#8A80FF;
+      --purple-2:#A78BFA;
+      --lilac:#F1EEFF;
+      --green:#00B981;
+      --blue:#82B5FF;
+      --yellow:#FFCA54;
+      --coral:#FF7167;
+
+      --glass:rgba(255,255,255,.62);
+      --radius-xl:42px;
+      --radius-lg:32px;
+      --shadow:0 22px 70px rgba(31,31,31,.055);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:'Work Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    body.loading .page{opacity:0; transform:translateY(14px)}
+    .page{opacity:1; transform:translateY(0); transition:opacity .8s ease, transform .8s ease}
+
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+
+    .ambient{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-2;
+      overflow:hidden;
+    }
+    .ambient::before,
+    .ambient::after{
+      content:"";
+      position:absolute;
+      width:540px;
+      height:540px;
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:.22;
+      animation:floatGlow 14s ease-in-out infinite alternate;
+    }
+    .ambient::before{background:var(--purple); left:-160px; top:8%}
+    .ambient::after{background:var(--green); right:-190px; top:44%; animation-delay:2s}
+    @keyframes floatGlow{
+      from{transform:translate3d(0,0,0) scale(1)}
+      to{transform:translate3d(42px,-36px,0) scale(1.08)}
+    }
+
+    .container{
+      width:min(1180px, calc(100% - 48px));
+      margin-inline:auto;
+    }
+
+    .nav{
+      position:sticky;
+      top:18px;
+      z-index:50;
+      margin:18px auto 0;
+      width:min(1180px, calc(100% - 32px));
+      height:68px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px;
+      border-radius:999px;
+      background:rgba(255,255,255,.62);
+      border:1px solid rgba(255,255,255,.75);
+      backdrop-filter:blur(18px);
+      box-shadow:0 12px 44px rgba(31,31,31,.045), inset 0 1px 0 rgba(255,255,255,.7);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:14px;
+      font-weight:500;
+      letter-spacing:-.02em;
+    }
+    .brand-mark{
+      width:28px;height:28px;border-radius:50%;
+      background:linear-gradient(135deg,#FF7167,#8A80FF);
+    }
+    .nav-links{
+      display:flex;
+      gap:24px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .back-home{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height:42px;
+      padding:0 18px;
+      border-radius:999px;
+      background:var(--ink);
+      color:white;
+      font-size:12px;
+      font-weight:500;
+      transition:.35s ease;
+    }
+    .back-home:hover{transform:translateY(-2px)}
+
+    section{padding:92px 0}
+    .hero{padding:96px 0 72px}
+
+    .eyebrow{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--soft);
+      font-weight:500;
+      margin-bottom:18px;
+    }
+    .eyebrow .dot{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--purple);
+      margin-right:12px;
+    }
+
+    h1{
+      font-size:clamp(4rem, 9.6vw, 8.4rem);
+      line-height:.9;
+      letter-spacing:-.065em;
+      font-weight:500;
+      max-width:980px;
+    }
+    .hero-sub{
+      max-width:660px;
+      margin-top:28px;
+      color:#667282;
+      font-size:18px;
+      line-height:1.75;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:32px;
+    }
+    .chip{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.55);
+      border:1px solid rgba(202,213,225,.55);
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:.88fr 1.12fr;
+      gap:44px;
+      align-items:center;
+    }
+
+    .phone-stage{
+      position:relative;
+      min-height:600px;
+      display:grid;
+      place-items:center;
+      perspective:1200px;
+    }
+    .phone-orbit{
+      position:absolute;
+      width:310px;
+      aspect-ratio:393/852;
+      border-radius:40px;
+      overflow:hidden;
+      background:#fff;
+      border:1px solid rgba(255,255,255,.8);
+      box-shadow:0 30px 80px rgba(138,128,255,.16);
+      opacity:.38;
+      filter:blur(1px);
+      transform:translateX(-130px) rotate(-8deg) scale(.78);
+      animation:floatPhone 7s ease-in-out infinite;
+    }
+    .phone-orbit.right{
+      transform:translateX(130px) rotate(8deg) scale(.78);
+      animation-delay:1.2s;
+    }
+    .phone-main{
+      position:relative;
+      width:min(360px, 72vw);
+      aspect-ratio:393/852;
+      border-radius:44px;
+      overflow:hidden;
+      background:#fff;
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:0 36px 100px rgba(31,31,31,.14), 0 18px 60px rgba(138,128,255,.18);
+      transform-style:preserve-3d;
+      transition:transform .28s ease;
+      z-index:2;
+    }
+    .phone-main img,
+    .phone-orbit img{
+      width:100%;height:100%;object-fit:cover;
+    }
+    @keyframes floatPhone{
+      0%,100%{margin-top:0}
+      50%{margin-top:-18px}
+    }
+
+    .section-grid{
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:62px;
+      align-items:start;
+    }
+    .section-title{
+      font-size:clamp(2.3rem, 5vw, 5rem);
+      line-height:1.03;
+      letter-spacing:-.06em;
+      font-weight:500;
+      max-width:850px;
+    }
+    .section-copy{
+      max-width:720px;
+      margin-top:24px;
+      color:#667282;
+      font-size:17px;
+      line-height:1.82;
+    }
+
+    .glass-card{
+      background:rgba(255,255,255,.62);
+      border:1px solid rgba(255,255,255,.78);
+      border-radius:var(--radius-lg);
+      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.7);
+      backdrop-filter:blur(18px);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-top:38px;
+    }
+    .stat{
+      padding:24px;
+    }
+    .stat strong{
+      display:block;
+      font-size:34px;
+      letter-spacing:-.05em;
+      font-weight:500;
+      color:var(--purple);
+    }
+    .stat span{
+      display:block;
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .comparison{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-top:38px;
+    }
+    .compare{
+      padding:30px;
+      min-height:360px;
+    }
+    .compare h3{
+      font-size:24px;
+      font-weight:500;
+      letter-spacing:-.04em;
+      margin-bottom:20px;
+    }
+    .compare ul{
+      list-style:none;
+      display:grid;
+      gap:14px;
+    }
+    .compare li{
+      color:#667282;
+      line-height:1.55;
+      font-size:15px;
+      display:flex;
+      gap:10px;
+    }
+    .compare li::before{
+      content:"";
+      width:10px;height:10px;border-radius:50%;margin-top:8px;flex:0 0 auto;
+      background:var(--purple);
+    }
+    .compare.before li::before{background:var(--coral)}
+    .compare.after li::before{background:var(--green)}
+
+    .principles{
+      display:grid;
+      grid-template-columns:repeat(7, minmax(210px, 1fr));
+      gap:14px;
+      overflow-x:auto;
+      padding:8px 0 20px;
+      scroll-snap-type:x proximity;
+    }
+    .principle{
+      min-height:230px;
+      padding:24px;
+      scroll-snap-align:start;
+      transition:.35s ease;
+    }
+    .principle:hover{transform:translateY(-6px)}
+    .principle .icon{
+      font-size:30px;
+      margin-bottom:46px;
+    }
+    .principle h3{
+      font-size:20px;
+      font-weight:500;
+      letter-spacing:-.04em;
+      margin-bottom:10px;
+    }
+    .principle p{
+      color:#667282;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .mockup-section{
+      overflow:hidden;
+    }
+    .mockup-gallery{
+      position:relative;
+      min-height:720px;
+      margin-top:48px;
+      display:grid;
+      place-items:center;
+    }
+    .gallery-frame{
+      position:relative;
+      width:min(390px, 72vw);
+      aspect-ratio:393/852;
+      border-radius:44px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.88);
+      box-shadow:0 30px 90px rgba(31,31,31,.12);
+      background:#fff;
+      z-index:4;
+      transition:.45s ease;
+    }
+    .gallery-frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .gallery-ghost{
+      position:absolute;
+      width:min(315px, 54vw);
+      aspect-ratio:393/852;
+      border-radius:38px;
+      overflow:hidden;
+      opacity:.42;
+      filter:blur(2px);
+      background:#fff;
+      border:1px solid rgba(255,255,255,.7);
+      box-shadow:0 24px 70px rgba(31,31,31,.08);
+      transition:.5s ease;
+      z-index:1;
+    }
+    .gallery-ghost.left{transform:translateX(-265px) scale(.82) rotate(-6deg)}
+    .gallery-ghost.right{transform:translateX(265px) scale(.82) rotate(6deg)}
+    .gallery-ghost img{width:100%;height:100%;object-fit:cover}
+
+    .gallery-controls{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:16px;
+      margin-top:22px;
+    }
+    .control{
+      width:52px;height:52px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.75);
+      background:rgba(255,255,255,.64);
+      backdrop-filter:blur(18px);
+      cursor:pointer;
+      font-size:24px;
+      color:var(--ink);
+      transition:.35s ease;
+    }
+    .control:hover{
+      transform:translateY(-4px);
+      background:var(--ink);
+      color:white;
+    }
+    .gallery-caption{
+      text-align:center;
+      max-width:560px;
+      margin:18px auto 0;
+    }
+    .gallery-caption h3{
+      font-size:26px;
+      letter-spacing:-.045em;
+      font-weight:500;
+    }
+    .gallery-caption p{
+      color:#667282;
+      line-height:1.65;
+      margin-top:8px;
+    }
+
+    .flow{
+      display:grid;
+      gap:14px;
+      margin-top:42px;
+    }
+    .flow-row{
+      display:grid;
+      grid-template-columns:80px 1fr 170px;
+      gap:14px;
+      align-items:center;
+      padding:20px;
+    }
+    .flow-num{
+      width:52px;height:52px;border-radius:50%;
+      background:var(--lilac);
+      display:grid;place-items:center;
+      color:var(--purple);
+      font-weight:500;
+    }
+    .flow-row h3{
+      font-size:22px;
+      letter-spacing:-.04em;
+      font-weight:500;
+      margin-bottom:5px;
+    }
+    .flow-row p{
+      color:#667282;
+      font-size:14px;
+      line-height:1.55;
+    }
+    .flow-time{
+      justify-self:end;
+      padding:9px 13px;
+      border-radius:999px;
+      background:rgba(138,128,255,.12);
+      color:var(--purple);
+      font-size:12px;
+    }
+
+    .ai-motion{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-top:42px;
+    }
+    .ai-card{
+      padding:34px;
+      min-height:300px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .ai-card h3{
+      font-size:28px;
+      font-weight:500;
+      letter-spacing:-.045em;
+    }
+    .ai-card p{
+      color:#667282;
+      line-height:1.75;
+      margin-top:12px;
+    }
+    .liquid{
+      width:160px;height:160px;border-radius:48% 52% 65% 35% / 44% 60% 40% 56%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(138,128,255,.55), rgba(0,185,129,.36));
+      align-self:flex-end;
+      animation:morph 8s ease-in-out infinite;
+      filter:blur(.2px);
+    }
+    @keyframes morph{
+      0%,100%{border-radius:48% 52% 65% 35% / 44% 60% 40% 56%; transform:rotate(0)}
+      50%{border-radius:62% 38% 40% 60% / 55% 44% 56% 45%; transform:rotate(12deg)}
+    }
+
+    .final{
+      padding:70px 46px;
+      border-radius:var(--radius-xl);
+      text-align:center;
+      background:linear-gradient(135deg, rgba(138,128,255,.14), rgba(0,185,129,.12), rgba(255,113,103,.08));
+      border:1px solid rgba(255,255,255,.78);
+      box-shadow:var(--shadow);
+    }
+    .final h2{
+      font-size:clamp(2.6rem,5.4vw,5.6rem);
+      line-height:1.02;
+      letter-spacing:-.065em;
+      font-weight:500;
+      max-width:1050px;
+      margin:auto;
+    }
+    .final p{
+      max-width:760px;
+      margin:28px auto 0;
+      color:#667282;
+      line-height:1.85;
+      font-size:17px;
+    }
+
+    .footer{
+      padding:46px 0 70px;
+      color:var(--soft);
+      font-size:13px;
+    }
+    .footer-inner{
+      border-top:1px solid var(--line);
+      padding-top:26px;
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(34px);
+      transition:opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media(max-width:980px){
+      .nav-links{display:none}
+      .hero-grid,.section-grid,.comparison,.ai-motion{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+      .mockup-gallery{min-height:640px}
+      .gallery-ghost.left{transform:translateX(-160px) scale(.72) rotate(-6deg)}
+      .gallery-ghost.right{transform:translateX(160px) scale(.72) rotate(6deg)}
+      .flow-row{grid-template-columns:52px 1fr}
+      .flow-time{grid-column:2;justify-self:start}
+    }
+    @media(max-width:640px){
+      .container{width:min(100% - 28px,1180px)}
+      .nav{height:62px}
+      .back-home{padding:0 14px}
+      h1{font-size:3.8rem}
+      section{padding:70px 0}
+      .hero{padding-top:64px}
+      .stats{grid-template-columns:1fr}
+      .gallery-ghost{display:none}
+      .mockup-gallery{min-height:auto; display:block}
+      .gallery-frame{margin:auto}
+    }
+  </style>
+
+<style id="kidzenith-gallery-side-arrows">
+  #telas .mockup-gallery{
+    position:relative !important;
+    overflow:visible !important;
+  }
+
+  #telas .gallery-controls{
+    display:none !important;
+  }
+
+  #telas .gallery-side-control{
+    position:absolute;
+    top:50%;
+    z-index:8;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.82);
+    background:rgba(255,255,255,.76);
+    color:#1F1F1F;
+    font-size:30px;
+    line-height:1;
+    cursor:pointer;
+    display:grid;
+    place-items:center;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 14px 38px rgba(31,31,31,.10);
+    transition:transform .35s cubic-bezier(.22,1,.36,1), background .35s ease, color .35s ease;
+  }
+
+  #telas .gallery-side-control.left{
+    left:clamp(0px, 2vw, 24px);
+    transform:translateY(-50%);
+  }
+
+  #telas .gallery-side-control.right{
+    right:clamp(0px, 2vw, 24px);
+    transform:translateY(-50%);
+  }
+
+  #telas .gallery-side-control:hover{
+    background:#1F1F1F;
+    color:#fff;
+  }
+
+  #telas .gallery-side-control.left:hover{
+    transform:translateY(calc(-50% - 4px)) scale(1.05);
+  }
+
+  #telas .gallery-side-control.right:hover{
+    transform:translateY(calc(-50% - 4px)) scale(1.05);
+  }
+
+  @media(max-width:980px){
+    #telas .mockup-gallery{
+      padding-bottom:76px;
+    }
+
+    #telas .gallery-side-control{
+      top:auto;
+      bottom:0;
+    }
+
+    #telas .gallery-side-control.left{
+      left:calc(50% - 66px);
+      transform:none;
+    }
+
+    #telas .gallery-side-control.right{
+      right:calc(50% - 66px);
+      transform:none;
+    }
+
+    #telas .gallery-side-control.left:hover,
+    #telas .gallery-side-control.right:hover{
+      transform:translateY(-4px) scale(1.05);
+    }
+  }
+</style>
+
+
+<style id="portfolio-animation-performance-fix">
+  html{ scroll-behavior:smooth; }
+
+  .reveal,
+  .parallax-card,
+  .phone-main,
+  .dog-hero-phone.main,
+  .dog-screen-main,
+  .gallery-frame,
+  .dog-gallery-frame,
+  .project-card,
+  .featured-card,
+  .glass{
+    backface-visibility:hidden;
+    transform:translateZ(0);
+  }
+
+  .reveal{ will-change:opacity, transform; }
+  .reveal.visible{ will-change:auto; }
+
+  .phone-main,
+  .dog-hero-phone.main,
+  .dog-screen-main,
+  .gallery-frame,
+  .dog-gallery-frame{
+    will-change:transform, opacity;
+  }
+
+  .ambient::before,
+  .ambient::after,
+  .liquid,
+  .orb,
+  .glow,
+  .blob{
+    will-change:transform;
+  }
+
+  .gallery-ghost,
+  .dog-gallery-ghost,
+  .phone-orbit,
+  .dog-screen-ghost,
+  .dog-hero-phone.ghost{
+    transform:translateZ(0);
+    will-change:transform, opacity;
+  }
+
+  @media(max-width:760px){
+    .gallery-ghost,
+    .dog-gallery-ghost,
+    .phone-orbit,
+    .dog-screen-ghost,
+    .dog-hero-phone.ghost{
+      filter:blur(1.5px) !important;
+    }
+  }
+
+  @media(prefers-reduced-motion: reduce){
+    *,
+    *::before,
+    *::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      scroll-behavior:auto !important;
+      transition-duration:.001ms !important;
+    }
+  }
+</style>
+
+
+
+
+
+<style id="portfolio-brand-menu-standard">
+  .brand{
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:0 !important;
+    font-family:"Satoshi","Work Sans",system-ui,sans-serif !important;
+    font-size:28px !important;
+    line-height:1 !important;
+    font-weight:500 !important;
+    letter-spacing:-.055em !important;
+    color:#1F1F1F !important;
+  }
+
+  .brand::after{
+    content:".";
+    color:#FF7167;
+  }
+
+  .brand-mark,
+  .brand-dot,
+  .brand-icon,
+  .brand span:not(.keep-brand-text){
+    display:none !important;
+  }
+
+  @media(max-width:640px){
+    .brand{
+      font-size:24px !important;
+    }
+  }
+</style>
+
+
+<style id="portfolio-title-scale-final-fix">
+  /* Títulos mais confortáveis para notebook de 13,3" */
+  @media (max-width: 1512px){
+    .hero h1{
+      font-size: clamp(38px, 4.9vw, 70px) !important;
+      line-height: 1.02 !important;
+      max-width: 760px !important;
+      letter-spacing: -.055em !important;
+    }
+
+    .section-title,
+    .section-head h2,
+    .closing-card h2{
+      font-size: clamp(32px, 3.75vw, 54px) !important;
+      line-height: 1.08 !important;
+      letter-spacing: -.055em !important;
+    }
+
+    .hero-lead,
+    .section-copy{
+      font-size: 16px !important;
+      line-height: 1.68 !important;
+    }
+
+    .hero{
+      padding-top: 116px !important;
+      padding-bottom: 58px !important;
+    }
+
+    .section{
+      padding-top: 72px !important;
+      padding-bottom: 72px !important;
+    }
+  }
+
+  @media (max-width: 1280px){
+    .hero h1{
+      font-size: clamp(36px, 4.6vw, 60px) !important;
+      line-height: 1.04 !important;
+    }
+
+    .section-title,
+    .section-head h2,
+    .closing-card h2{
+      font-size: clamp(30px, 3.4vw, 46px) !important;
+      line-height: 1.1 !important;
+    }
+
+    .hero-grid{
+      gap: 34px !important;
+    }
+
+    .terpafy-stage,
+    .mockup-stage,
+    .dog-hero-stage{
+      min-height: 500px !important;
+    }
+  }
+
+  @media (max-width: 980px){
+    .hero h1{
+      font-size: clamp(34px, 8.4vw, 52px) !important;
+    }
+
+    .section-title,
+    .section-head h2,
+    .closing-card h2{
+      font-size: clamp(30px, 7vw, 46px) !important;
+    }
+  }
+</style>
+
+
+<style id="portfolio-nav-link-variant-fix">
+  nav .brand{
+    display:inline-flex !important;
+    align-items:center !important;
+    font-family:"Satoshi","Work Sans",system-ui,sans-serif !important;
+    font-size:28px !important;
+    line-height:1 !important;
+    font-weight:500 !important;
+    letter-spacing:-.055em !important;
+    color:#1F1F1F !important;
+  }
+
+  nav .brand::after{
+    content:".";
+    color:#FF7167;
+  }
+
+  nav .nav-links,
+  .nav .nav-links{
+    align-items:center;
+  }
+
+  @media(max-width:640px){
+    nav .brand{font-size:24px !important;}
+  }
+</style>
+
+</head>
+<body class="loading">
+  <div class="ambient"></div>
+  <div class="page">
+    <nav class="nav">
+      <a class="brand" href="index.html">Isabela</a>
+      <div class="nav-links">
+        <a href="#problema">Problema</a>
+        <a href="#solucao">Solução</a>
+        <a href="#telas">Telas</a>
+        <a href="#motion">Motion</a>
+      </div>
+      <a class="back-home" href="index.html">Voltar para home</a>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="reveal">
+            <div class="eyebrow"><span class="dot"></span>Kidzenith Onboarding · 2026</div>
+            <h1>Onboarding que entrega valor antes de pedir cadastro.</h1>
+            <p class="hero-sub">
+              Redesenho do fluxo de onboarding da Kidzenith para acolher famílias, reduzir fricção e acelerar o primeiro momento de valor. A proposta combina UX Writing, Motion com IA, UX Design, UI Design e prototipação com Claude.
+            </p>
+            <div class="chips">
+              <span class="chip">UX Writing</span>
+              <span class="chip">Motion com IA</span>
+              <span class="chip">UX Design</span>
+              <span class="chip">UI Design</span>
+              <span class="chip">Claude</span>
+            </div>
+          </div>
+
+          <div class="phone-stage reveal" id="phoneStage">
+            <div class="phone-orbit"><img src="assets/kidz-02-pergunta-filho.jpg" alt="" decoding="async" draggable="false"></div>
+            <div class="phone-orbit right"><img src="assets/kidz-08-plano.jpg" alt="" decoding="async" draggable="false"></div>
+            <div class="phone-main" id="heroPhone">
+              <img src="assets/kidz-01-hook-emocional.jpg" alt="Tela inicial do onboarding Kidzenith" decoding="async" draggable="false">
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="stats reveal">
+            <div class="stat glass-card"><strong>18 → 9</strong><span>Telas reduzidas para uma jornada mais direta.</span></div>
+            <div class="stat glass-card"><strong>≤ 90s</strong><span>Tempo estimado para chegar ao valor.</span></div>
+            <div class="stat glass-card"><strong>7</strong><span>Princípios de UX e comportamento aplicados.</span></div>
+            <div class="stat glass-card"><strong>Aha</strong><span>Insight entregue antes do cadastro.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="problema">
+        <div class="container section-grid">
+          <div><div class="eyebrow">01 · Diagnóstico</div></div>
+          <div class="reveal">
+            <h2 class="section-title">O fluxo precisava atender melhor o usuário e o objetivo do cliente.</h2>
+            <p class="section-copy">
+              O desafio era reduzir abandono sem empobrecer a experiência. O onboarding anterior explicava muito antes de entregar valor, tinha mais etapas do que o necessário e criava fricção antes do usuário entender o benefício do produto.
+            </p>
+
+            <div class="comparison">
+              <div class="compare before glass-card">
+                <h3>Antes</h3>
+                <ul>
+                  <li>Paredes de texto e explicações longas no início da jornada.</li>
+                  <li>Valor percebido aparecendo tarde demais.</li>
+                  <li>Cadastro com alta fricção antes da recompensa.</li>
+                  <li>Ritmo mais longo, com maior risco de abandono.</li>
+                </ul>
+              </div>
+              <div class="compare after glass-card">
+                <h3>Depois</h3>
+                <ul>
+                  <li>Perguntas rápidas, progressivas e de baixa fricção.</li>
+                  <li>Insight emocional antes do cadastro.</li>
+                  <li>Cadastro depois do desejo pelo plano estar formado.</li>
+                  <li>Fluxo mais curto, claro e orientado à conversão.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="solucao">
+        <div class="container section-grid">
+          <div><div class="eyebrow">02 · Estratégia</div></div>
+          <div class="reveal">
+            <h2 class="section-title">Uma jornada desenhada para criar confiança antes da conversão.</h2>
+            <p class="section-copy">
+              A solução reorganiza a narrativa em cinco momentos: entrada emocional, engajamento rápido, primeiro insight, tensão de conversão e recompensa final. Cada etapa tem uma função psicológica clara.
+            </p>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="flow reveal">
+            <div class="flow-row glass-card">
+              <div class="flow-num">01</div>
+              <div><h3>Entrada emocional</h3><p>Hook direto na dor dos pais, com promessa clara e sem cadastro inicial.</p></div>
+              <div class="flow-time">0–5s</div>
+            </div>
+            <div class="flow-row glass-card">
+              <div class="flow-num">02</div>
+              <div><h3>Microcompromissos</h3><p>Perguntas por toque, reduzindo esforço e mantendo sensação de avanço.</p></div>
+              <div class="flow-time">5–30s</div>
+            </div>
+            <div class="flow-row glass-card">
+              <div class="flow-num">03</div>
+              <div><h3>Aha Moment</h3><p>Primeiro insight antes do cadastro, validando a dor da família.</p></div>
+              <div class="flow-time">30–50s</div>
+            </div>
+            <div class="flow-row glass-card">
+              <div class="flow-num">04</div>
+              <div><h3>Cadastro com desejo formado</h3><p>Plano bloqueado cria curiosidade sem interromper cedo demais.</p></div>
+              <div class="flow-time">50–70s</div>
+            </div>
+            <div class="flow-row glass-card">
+              <div class="flow-num">05</div>
+              <div><h3>Recompensa final</h3><p>Plano personalizado com ações simples, úteis e imediatas.</p></div>
+              <div class="flow-time">70–90s</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container section-grid">
+          <div><div class="eyebrow">03 · Fundamentos de UX</div></div>
+          <div class="reveal">
+            <h2 class="section-title">Decisões apoiadas em comportamento, clareza e ritmo.</h2>
+          </div>
+        </div>
+        <div class="container">
+          <div class="principles reveal">
+            <div class="principle glass-card"><div class="icon">🎯</div><h3>Efeito Zeigarnik</h3><p>Progressão visível para incentivar conclusão da jornada.</p></div>
+            <div class="principle glass-card"><div class="icon">🍞</div><h3>Breadcrumb</h3><p>Perguntas fáceis primeiro, com comprometimento gradual.</p></div>
+            <div class="principle glass-card"><div class="icon">💡</div><h3>Aha Moment</h3><p>Valor percebido antes do cadastro para reduzir resistência.</p></div>
+            <div class="principle glass-card"><div class="icon">👥</div><h3>Prova social</h3><p>Normalização da preocupação para diminuir culpa e isolamento.</p></div>
+            <div class="principle glass-card"><div class="icon">🔒</div><h3>Curiosidade</h3><p>Plano bloqueado como recurso de tensão e continuidade.</p></div>
+            <div class="principle glass-card"><div class="icon">✨</div><h3>Personalização</h3><p>Uso do nome da criança para reforçar relevância.</p></div>
+            <div class="principle glass-card"><div class="icon">⚡</div><h3>Baixa fricção</h3><p>Sem cadastro antes do valor e login social como caminho principal.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="telas" class="mockup-section">
+        <div class="container section-grid">
+          <div><div class="eyebrow">04 · Telas e mockups</div></div>
+          <div class="reveal">
+            <h2 class="section-title">Uma galeria interativa do fluxo redesenhado.</h2>
+            <p class="section-copy">
+              As telas foram organizadas em um mockup central para valorizar o fluxo sem perder qualidade dos arquivos. Use as setas para navegar entre os principais momentos da experiência.
+            </p>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="mockup-gallery reveal">
+            <div class="gallery-ghost left"><img id="prevShot" src="assets/kidz-09-acao-imediata.jpg" alt="" decoding="async" draggable="false"></div>
+            <div class="gallery-frame" id="galleryFrame">
+              <img id="mainShot" src="assets/kidz-01-hook-emocional.jpg" alt="Tela do onboarding Kidzenith" decoding="async" draggable="false">
+            </div>
+            <div class="gallery-ghost right"><img id="nextShot" src="assets/kidz-02-pergunta-filho.jpg" alt="" decoding="async" draggable="false"></div>
+            <button class="gallery-side-control left" id="prevBtn" aria-label="Tela anterior">‹</button>
+            <button class="gallery-side-control right" id="nextBtn" aria-label="Próxima tela">›</button>
+          </div>          <div class="gallery-caption" id="galleryCaption">
+            <h3>Hook emocional</h3>
+            <p>A primeira tela cria contexto, reduz objeções e apresenta a promessa de valor sem exigir cadastro.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="motion">
+        <div class="container section-grid">
+          <div><div class="eyebrow">05 · Motion com IA</div></div>
+          <div class="reveal">
+            <h2 class="section-title">Movimento como microfeedback, não como decoração.</h2>
+            <p class="section-copy">
+              O motion foi pensado para sustentar expectativa, suavizar transições e deixar o fluxo mais acolhedor. Com apoio de IA, as telas e personagens podem ganhar microinterações que reforçam o estado emocional de cada etapa.
+            </p>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="ai-motion reveal">
+            <div class="ai-card glass-card">
+              <div>
+                <h3>Loading com intenção</h3>
+                <p>Os carregamentos foram tratados como momentos de antecipação: curtos, úteis e conectados ao que está sendo analisado.</p>
+              </div>
+              <div class="liquid"></div>
+            </div>
+            <div class="ai-card glass-card">
+              <div>
+                <h3>Personagens no momento certo</h3>
+                <p>Os mascotes não aparecem como propaganda. Eles entram para apoiar a narrativa, acolher e reforçar o valor do plano.</p>
+              </div>
+              <div class="liquid" style="background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(0,185,129,.45), rgba(255,202,84,.38)); animation-delay:1.3s"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="final reveal">
+            <h2>Um onboarding mais curto, mais humano e mais útil para famílias.</h2>
+            <p>
+              O redesenho transforma o primeiro contato com a Kidzenith em uma experiência de acolhimento e descoberta. A conversão deixa de depender de pressão e passa a nascer de clareza, valor percebido e confiança.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>© 2026 Isabela Amaral · Kidzenith Onboarding Case Study</p>
+        <a href="index.html">Voltar para o portfólio</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.body.classList.remove('loading');
+    });
+
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.14});
+    revealEls.forEach(el => io.observe(el));
+
+    const heroPhone = document.getElementById('heroPhone');
+    const phoneStage = document.getElementById('phoneStage');
+    if(phoneStage && heroPhone){
+      phoneStage.addEventListener('mousemove', (e) => {
+        const r = phoneStage.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5;
+        const y = (e.clientY - r.top) / r.height - .5;
+        heroPhone.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-4px)`;
+      });
+      phoneStage.addEventListener('mouseleave', () => {
+        heroPhone.style.transform = '';
+      });
+    }
+
+    const shots = [
+      {
+        src:'assets/kidz-01-hook-emocional.jpg',
+        title:'Hook emocional',
+        text:'A primeira tela cria contexto, reduz objeções e apresenta a promessa de valor sem exigir cadastro.'
+      },
+      {
+        src:'assets/kidz-02-pergunta-filho.jpg',
+        title:'Primeiro microcompromisso',
+        text:'A jornada começa com perguntas simples para criar personalização e avançar sem parecer formulário.'
+      },
+      {
+        src:'assets/kidz-03-preocupacoes.jpg',
+        title:'Preocupações priorizadas',
+        text:'A escolha de até duas opções ajuda o usuário a focar no que realmente importa naquele momento.'
+      },
+      {
+        src:'assets/kidz-04-frequencia.jpg',
+        title:'Frequência e contexto',
+        text:'A frequência ajuda o sistema a entender intensidade sem aumentar carga cognitiva.'
+      },
+      {
+        src:'assets/kidz-05-loading.jpg',
+        title:'Análise do perfil',
+        text:'O loading deixa claro que o sistema está processando as informações e preparando uma resposta personalizada.'
+      },
+      {
+        src:'assets/kidz-06-aha-moment.jpg',
+        title:'Aha Moment',
+        text:'O insight aparece antes do cadastro para mostrar valor real e validar a preocupação da família.'
+      },
+      {
+        src:'assets/kidz-07-cadastro.jpg',
+        title:'Cadastro no momento certo',
+        text:'O cadastro aparece depois do desejo pelo plano estar formado, reduzindo resistência.'
+      },
+      {
+        src:'assets/kidz-08-plano.jpg',
+        title:'Recompensa final',
+        text:'O plano entrega ações claras, específicas e imediatamente aplicáveis.'
+      },
+      {
+        src:'assets/kidz-09-acao-imediata.jpg',
+        title:'Ação imediata',
+        text:'A experiência termina com um próximo passo simples, reforçando utilidade e continuidade.'
+      }
+    ];
+
+    let current = 0;
+    const mainShot = document.getElementById('mainShot');
+    const prevShot = document.getElementById('prevShot');
+    const nextShot = document.getElementById('nextShot');
+    const caption = document.getElementById('galleryCaption');
+    const frame = document.getElementById('galleryFrame');
+
+    function updateGallery(direction = 1){
+      const prev = (current - 1 + shots.length) % shots.length;
+      const next = (current + 1) % shots.length;
+
+      frame.style.transform = `translateX(${direction * 10}px) scale(.985)`;
+      frame.style.opacity = '.65';
+
+      setTimeout(() => {
+        mainShot.src = shots[current].src;
+        prevShot.src = shots[prev].src;
+        nextShot.src = shots[next].src;
+        caption.innerHTML = `<h3>${shots[current].title}</h3><p>${shots[current].text}</p>`;
+        frame.style.transform = '';
+        frame.style.opacity = '1';
+      }, 170);
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      current = (current - 1 + shots.length) % shots.length;
+      updateGallery(-1);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      current = (current + 1) % shots.length;
+      updateGallery(1);
+    });
+  </script>
+
+<script id="portfolio-animation-performance-script">
+(function(){
+  function setupRafParallax(stageId, targetId, strength){
+    const stage = document.getElementById(stageId);
+    const target = document.getElementById(targetId);
+    if(!stage || !target) return;
+
+    let raf = null;
+    let lastEvent = null;
+
+    function update(){
+      if(!lastEvent) return;
+      const rect = stage.getBoundingClientRect();
+      const x = (lastEvent.clientX - rect.left) / rect.width - .5;
+      const y = (lastEvent.clientY - rect.top) / rect.height - .5;
+      target.style.transform = `rotateY(${x * strength}deg) rotateX(${-y * strength}deg) translate3d(0,-4px,0)`;
+      raf = null;
+    }
+
+    stage.addEventListener('mousemove', function(e){
+      lastEvent = e;
+      if(!raf) raf = requestAnimationFrame(update);
+    }, { passive:true });
+
+    stage.addEventListener('mouseleave', function(){
+      lastEvent = null;
+      if(raf) cancelAnimationFrame(raf);
+      raf = null;
+      target.style.transform = '';
+    }, { passive:true });
+  }
+
+  function optimizeImages(){
+    document.querySelectorAll('img').forEach(function(img, index){
+      if(index > 2 && !img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+      if(!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+      img.setAttribute('draggable', 'false');
+    });
+  }
+
+  function releaseWillChange(){
+    const items = document.querySelectorAll('.reveal');
+    if(!items.length) return;
+
+    const observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          setTimeout(function(){ entry.target.style.willChange = 'auto'; }, 900);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold:.12, rootMargin:'0px 0px -6% 0px' });
+
+    items.forEach(function(el){
+      if(!el.classList.contains('visible')) observer.observe(el);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    optimizeImages();
+    releaseWillChange();
+
+    setupRafParallax('phoneStage', 'heroPhone', 10);
+    setupRafParallax('dogHeroStage', 'dogHeroScreen', 8);
+  });
+})();
+</script>
+
+</body>
+</html>
